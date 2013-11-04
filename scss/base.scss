@@ -1,0 +1,21 @@
+$textColour: #333;
+$border-radius: 0.5em;
+
+@mixin box-sizing() {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+body {
+	color: $textColour;
+	margin: 0 auto;
+	@include box-sizing();
+}
+
+.container {
+	.article-snippet {
+		border-color: $textColour;
+		border-radius: $border-radius;
+	}
+}

@@ -1,0 +1,12 @@
+body {
+  color: #333333;
+  margin: 0 auto;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+.container .article-snippet {
+  border-color: #333333;
+  border-radius: 0.5em;
+}
