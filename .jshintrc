@@ -1,0 +1,7 @@
+{
+	"bitwise" : true,
+	"browser" : true,
+	"eqeqeq": true,
+	"forin" : true,
+	"jquery": true
+}

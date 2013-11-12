@@ -1,54 +1,71 @@
 module.exports = function(grunt) {
-	grunt.initConfig({
-		pkg: grunt.file.readJSON('package.json'),
-		jshint: {
-			options: {
-				curly: true,
-				eqeqeq: true,
-				eqnull: true,
-				browser: true,
-				globals: {
-					jQuery: true
-				}
+	var pkg = grunt.file.readJSON('package.json'),
+		scripts = ['js/**/*.js', '!**/*.min.js', '!node_modules/**/*.js'],
+		paths = {
+			min: 'build/js/app.min.js',
+			scss: 'scss/',
+			css: 'css/'
+		}, 
+		config = {
+			pkg: pkg,
+			scripts : scripts,
+			paths : paths,
+			jshint: {
+				options: { jshintrc: '.jshintrc' },
+				all: scripts
 			},
-			files: ['js/**/*.js']
-		},
-		sass: {
-			dist: {
-				options: {
-					style: 'compressed'
+			uglify : {
+				options: { compress: { unsafe : false } },
+				dist: {
+					options: {
+						banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - <%= pkg.author %> - <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+					},
+					src: '<%= scripts %>',
+					dest: paths.min
 				},
-				files: {
-					'css/base.css' : 'scss/base.scss'
-				}
 			},
-			dev: {
+
+			concat: {
 				options: {
-					style: 'expanded'
+					separator: ';',
 				},
-				files: {
-					'css/base.css' : 'scss/base.scss'
+				dist: {
+					src: '<%= scripts %>',
+					dest: 'build/app.js'
 				}
-			}
-		},
-		watch: {
-			scripts: {
-				files: ['**/*.js'],
-				tasks: ['jshint']
 			},
-			css : {
-				files: ['**/*.scss'],
-				tasks: ['sass:dev']
+
+			sass: {
+				dist: {
+					options: {
+						style: 'compressed'
+					},
+					files: {
+						'build/css/base.css' : 'scss/base.scss'
+					}
+				},
+				dev: {
+					options: {
+						style: 'expanded'
+					},
+					files: {
+						'build/css/base.css' : 'scss/base.scss'
+					}
+				},
+			},
+
+			watch: {
+				tasks: ['dev'],
+				files: [scripts, 'Gruntfile.js', 'scss/**/*.scss'] //If we add Gruntfile.js to the watch task, it'll rerun when we make changes
 			}
-		}
-	});
+		};
 
-	// Load any plugins we need
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-contrib-sass');
-	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.initConfig(config);
 
-	// Set up any tasks here
-	grunt.registerTask('default', ['jshint', 'sass:dist']);
-	grunt.registerTask('dev', ['jshint', 'sass:dev']);
-}
+	// grunt.loadNpmTasks('grunt-contrib-jshint');
+	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+
+	grunt.registerTask('default', ['jshint', 'uglify', 'sass:dist']);
+	grunt.registerTask('dev', ['jshint', 'concat', 'sass:dev']);
+	// grunt.registerTask('watch', ['default']);
+};
