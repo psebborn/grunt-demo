@@ -62,10 +62,7 @@ module.exports = function(grunt) {
 
 	grunt.initConfig(config);
 
-	// grunt.loadNpmTasks('grunt-contrib-jshint');
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	grunt.registerTask('default', ['jshint', 'uglify', 'sass:dist']);
-	grunt.registerTask('dev', ['jshint', 'concat', 'sass:dev']);
-	// grunt.registerTask('watch', ['default']);
 };
